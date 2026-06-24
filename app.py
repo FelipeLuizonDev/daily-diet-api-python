@@ -60,5 +60,14 @@ def list_meals():
     
     return success_response("Meals retrieved successfully", {"meals": [meal.to_dict() for meal in meals]})
 
+@app.route("/meals/<int:meal_id>", methods=["GET"])
+def get_meal(meal_id):
+    meal = db.session.get(Meal, meal_id)
+    
+    if not meal:
+        return error_response("Meal not found", 404)
+    
+    return success_response("Meal retrieved successfully", {"meal": meal.to_dict()})
+
 if __name__ == "__main__":
     app.run(debug=True)
