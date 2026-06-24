@@ -69,5 +69,33 @@ def get_meal(meal_id):
     
     return success_response("Meal retrieved successfully", {"meal": meal.to_dict()})
 
+@app.route("/meals/<int:meal_id>", methods=["PUT"])
+def update_meal(meal_id):
+    meal = db.session.get(Meal, meal_id)
+    
+    if not meal:
+        return error_response("Meal not found", 404)
+    
+    data = request.get_json()
+    
+    if "name" in data:
+        meal.name = data["name"]
+        
+    if "description" in data:
+        meal.description = data["description"]
+        
+    if "datetime" in data:
+        try:
+            meal.datetime = datetime.fromisoformat(data["datetime"])
+        except ValueError:
+            return error_response("Invalid datetime format")
+
+    if "is_on_diet" in data:
+        meal.is_on_diet = data["is_on_diet"]
+        
+    db.session.commit()
+    
+    return success_response("Meal updated successfully", {"meal": meal.to_dict()})
+
 if __name__ == "__main__":
     app.run(debug=True)
