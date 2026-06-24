@@ -54,6 +54,11 @@ def create_meal():
     
     return success_response("Meal created successfully", {"meal_id": meal.id}, 201)
 
+@app.route("/meals", methods=["GET"])
+def list_meals():
+    meals = Meal.query.all()
+    
+    return success_response("Meals retrieved successfully", {"meals": [meal.to_dict() for meal in meals]})
 
 if __name__ == "__main__":
     app.run(debug=True)

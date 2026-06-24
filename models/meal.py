@@ -8,3 +8,12 @@ class Meal(db.Model):
     description = db.Column(db.Text, nullable=False)
     datetime = db.Column(db.DateTime, nullable=False)
     is_on_diet = db.Column(db.Boolean, nullable=False)
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "datetime": self.datetime.isoformat(),
+            "is_on_diet": self.is_on_diet
+        }
