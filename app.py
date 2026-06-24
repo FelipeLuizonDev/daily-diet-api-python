@@ -97,5 +97,17 @@ def update_meal(meal_id):
     
     return success_response("Meal updated successfully", {"meal": meal.to_dict()})
 
+@app.route("/meals/<int:meal_id>", methods=["DELETE"])
+def delete_meal(meal_id):
+    meal = db.session.get(Meal, meal_id)
+    
+    if not meal:
+        return error_response("Meal not found", 404)
+    
+    db.session.delete(meal)
+    db.session.commit()
+    
+    return success_response("Meal deleted successfully")
+
 if __name__ == "__main__":
     app.run(debug=True)
