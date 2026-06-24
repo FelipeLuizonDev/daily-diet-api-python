@@ -3,6 +3,7 @@ from datetime import datetime
 
 from database import db
 from models import Meal
+from utils import success_response, error_response
 
 app = Flask(__name__)
 
@@ -34,12 +35,12 @@ def create_meal():
     
     for field in required_fields:
         if field not in data:
-            return {"message": f"{field} is required."}, 400
+            return error_response(f"{field} is required")
         
     try:
         meal_datetime = datetime.fromisoformat(data["datetime"])
     except ValueError:
-        return {"message": "Invalid datetime format"}, 400
+        return error_response("Invalid datetime format")
     
     meal = Meal(
         name=data["name"], # type: ignore
@@ -51,7 +52,7 @@ def create_meal():
     db.session.add(meal)
     db.session.commit()
     
-    return {"message": "Meal created successfully", "meal_id": meal.id}, 201
+    return success_response("Meal created successfully", {"meal_id": meal.id}, 201)
 
 
 if __name__ == "__main__":
